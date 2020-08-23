@@ -52,26 +52,19 @@ jobs:
         brew: ${{ matrix.brew }}
     - uses: actions/checkout@v2
 
-    - name: Cache Local
-        id: cache-local
-        uses: actions/cache@v1
-        with:
-          path: ~/.local/
-          key: ${{ runner.os }}-local-v1
+    - name: Cache Stack
+      id: cache-stack
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-v1
 
-      - name: Cache Stack
-        id: cache-stack
-        uses: actions/cache@v1
-        with:
-          path: ~/.stack
-          key: ${{ runner.os }}-stack-v1
-
-      - name: Cache Cabal
-        id: cache-cabal
-        uses: actions/cache@v1
-        with:
-          path: ~/.cabal
-          key: ${{ runner.os }}-cabal-v1
+    - name: Cache Cabal
+      id: cache-cabal
+      uses: actions/cache@v1
+      with:
+        path: ~/.cabal
+        key: ${{ runner.os }}-cabal-v1
 
     - name: Build
       run: |
