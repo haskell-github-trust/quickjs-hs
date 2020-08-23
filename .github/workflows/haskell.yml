@@ -52,9 +52,6 @@ jobs:
         brew: ${{ matrix.brew }}
     - uses: actions/checkout@v2
 
-    - name: Checkout
-        uses: actions/checkout@v2
-
     - name: Cache Local
         id: cache-local
         uses: actions/cache@v1
