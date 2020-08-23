@@ -1,0 +1,87 @@
+cabal-version:  1.12
+name:           quickjs-hs
+version:        0.1
+description:    Please see the README on GitHub at <https://github.com/goodlyrottenapple/quickjs-hs#readme>
+homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
+bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
+author:         Sam Balco
+maintainer:     goodlyrottenapple@gmail.com
+copyright:      2020 Sam Balco
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+category:       Javascript
+synopsis:       Bindings for the QuickJS library
+-- description:
+
+source-repository head
+  type: git
+  location: https://github.com/goodlyrottenapple/quickjs-hs
+
+library
+  exposed-modules:
+      Quickjs, Quickjs.Types, Quickjs.Error
+  other-modules:
+      Paths_quickjs_hs
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , aeson
+    , bytestring
+    , containers
+    , exceptions
+    , inline-c
+    , mtl
+    , scientific
+    , string-conv
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , unordered-containers
+    , vector
+  default-language: Haskell2010
+  Include-dirs: quickjs
+  -- Order matters for dynamic linking, see GHC#12152.
+  -- To make both `cabal repl` and `stack ghci` work, we have to
+  -- make "a.cpp" come alphabetically before "main.cpp".
+  C-sources: 
+      quickjs/cutils.c
+    , quickjs/libbf.c
+    , quickjs/libregexp.c
+    , quickjs/libunicode.c
+    , quickjs/quickjs.h
+    , quickjs/quickjs.c
+    , quickjs/quickjs-libc.h
+    , quickjs/quickjs-libc.c
+  cc-options: 
+    -static -D_GNU_SOURCE 
+    -DCONFIG_VERSION="2020-07-05"
+    -DCONFIG_BIGNUM
+
+test-suite quickjs-hs-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_quickjs_hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , quickjs-hs
+    , aeson
+    , exceptions
+    , HUnit
+    , QuickCheck
+    , tasty
+    , tasty-hunit
+    , tasty-quickcheck
+    , text
+    , unordered-containers
+    , vector
+  default-language: Haskell2010
