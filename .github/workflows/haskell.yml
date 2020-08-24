@@ -19,8 +19,17 @@ name: Tests CI
 
 on:
   push:
-  schedule:
-  - cron: "0 0 * * 1"
+    branches:
+    - master
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'quickjs/**'
+      - 'stack.yaml'
+      - 'quickjs-hs.cabal'
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:

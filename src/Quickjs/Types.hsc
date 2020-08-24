@@ -1,10 +1,9 @@
-{-# LANGUAGE QuasiQuotes, TemplateHaskell, OverloadedStrings, MultiParamTypeClasses, FlexibleInstances, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE QuasiQuotes, TemplateHaskell, OverloadedStrings, MultiParamTypeClasses, FlexibleInstances, GeneralizedNewtypeDeriving #-}
 
 module Quickjs.Types where
 
-import qualified Data.Map as Map
-import           GHC.Generics
-import           Data.Aeson                (ToJSON(..))
+import qualified Data.Map                  as Map
+import           Data.Bits                 (Bits)
 import           Foreign.C.Types
 import           Foreign.Ptr               (plusPtr)
 import           Foreign.Storable          (Storable(..))
@@ -84,63 +83,63 @@ class FromCType ty cty where
   fromCType :: cty -> Maybe ty
 
 
-data JSTagEnum =  JSTagFirst
-                | JSTagBigDecimal
-                | JSTagBigInt
-                | JSTagBigFloat
-                | JSTagSymbol
-                | JSTagString
-                | JSTagModule
-                | JSTagFunctionBytecode
-                | JSTagObject
-                | JSTagInt
-                | JSTagBool
-                | JSTagNull
-                | JSTagUndefined
-                | JSTagUninitialized
-                | JSTagCatchOffset
-                | JSTagException
-                | JSTagFloat64
-  deriving (Show, Eq, Generic, ToJSON)
+data JSTagEnum = JSTagFirst
+               | JSTagBigDecimal
+               | JSTagBigInt
+               | JSTagBigFloat
+               | JSTagSymbol
+               | JSTagString
+               | JSTagModule
+               | JSTagFunctionBytecode
+               | JSTagObject
+               | JSTagInt
+               | JSTagBool
+               | JSTagNull
+               | JSTagUndefined
+               | JSTagUninitialized
+               | JSTagCatchOffset
+               | JSTagException
+               | JSTagFloat64
+  deriving (Show, Eq)
   
 instance Num a => ToCType JSTagEnum a where
-  toCType JSTagFirst            = -11
-  toCType JSTagBigDecimal       = -11
-  toCType JSTagBigInt           = -10
-  toCType JSTagBigFloat         = -9
-  toCType JSTagSymbol           = -8
-  toCType JSTagString           = -7 
-  toCType JSTagModule           = -3 
-  toCType JSTagFunctionBytecode = -2
-  toCType JSTagObject           = -1
-  toCType JSTagInt              = 0  
-  toCType JSTagBool             = 1 
-  toCType JSTagNull             = 2    
-  toCType JSTagUndefined        = 3  
-  toCType JSTagUninitialized    = 4 
-  toCType JSTagCatchOffset      = 5
-  toCType JSTagException        = 6
-  toCType JSTagFloat64          = 7
+  toCType JSTagFirst            = #{const JS_TAG_FIRST}
+  toCType JSTagBigDecimal       = #{const JS_TAG_BIG_DECIMAL}
+  toCType JSTagBigInt           = #{const JS_TAG_BIG_INT}
+  toCType JSTagBigFloat         = #{const JS_TAG_BIG_FLOAT}
+  toCType JSTagSymbol           = #{const JS_TAG_SYMBOL}
+  toCType JSTagString           = #{const JS_TAG_STRING}
+  toCType JSTagModule           = #{const JS_TAG_MODULE}
+  toCType JSTagFunctionBytecode = #{const JS_TAG_FUNCTION_BYTECODE}
+  toCType JSTagObject           = #{const JS_TAG_OBJECT}
+  toCType JSTagInt              = #{const JS_TAG_INT}
+  toCType JSTagBool             = #{const JS_TAG_BOOL}
+  toCType JSTagNull             = #{const JS_TAG_NULL}
+  toCType JSTagUndefined        = #{const JS_TAG_UNDEFINED}
+  toCType JSTagUninitialized    = #{const JS_TAG_UNINITIALIZED}
+  toCType JSTagCatchOffset      = #{const JS_TAG_CATCH_OFFSET}
+  toCType JSTagException        = #{const JS_TAG_EXCEPTION}
+  toCType JSTagFloat64          = #{const JS_TAG_FLOAT64}
 
 
 instance (Eq a, Num a) => FromCType JSTagEnum a where
-  fromCType (-11) = Just JSTagBigDecimal
-  fromCType (-10) = Just JSTagBigInt
-  fromCType  (-9) = Just JSTagBigFloat
-  fromCType  (-8) = Just JSTagSymbol
-  fromCType  (-7) = Just JSTagString
-  fromCType  (-3) = Just JSTagModule
-  fromCType  (-2) = Just JSTagFunctionBytecode
-  fromCType  (-1) = Just JSTagObject
-  fromCType   0 = Just JSTagInt
-  fromCType   1 = Just JSTagBool
-  fromCType   2 = Just JSTagNull
-  fromCType   3 = Just JSTagUndefined
-  fromCType   4 = Just JSTagUninitialized
-  fromCType   5 = Just JSTagCatchOffset
-  fromCType   6 = Just JSTagException 
-  fromCType   7 = Just JSTagFloat64
-  fromCType   _ = Nothing
+  fromCType (#{const JS_TAG_BIG_DECIMAL}) = Just JSTagBigDecimal
+  fromCType (#{const JS_TAG_BIG_INT}) = Just JSTagBigInt
+  fromCType (#{const JS_TAG_BIG_FLOAT}) = Just JSTagBigFloat
+  fromCType (#{const JS_TAG_SYMBOL}) = Just JSTagSymbol
+  fromCType (#{const JS_TAG_STRING}) = Just JSTagString
+  fromCType (#{const JS_TAG_MODULE}) = Just JSTagModule
+  fromCType (#{const JS_TAG_FUNCTION_BYTECODE}) = Just JSTagFunctionBytecode
+  fromCType (#{const JS_TAG_OBJECT}) = Just JSTagObject
+  fromCType (#{const JS_TAG_INT}) = Just JSTagInt
+  fromCType (#{const JS_TAG_BOOL}) = Just JSTagBool
+  fromCType (#{const JS_TAG_NULL}) = Just JSTagNull
+  fromCType (#{const JS_TAG_UNDEFINED}) = Just JSTagUndefined
+  fromCType (#{const JS_TAG_UNINITIALIZED}) = Just JSTagUninitialized
+  fromCType (#{const JS_TAG_CATCH_OFFSET}) = Just JSTagCatchOffset
+  fromCType (#{const JS_TAG_EXCEPTION}) = Just JSTagException 
+  fromCType (#{const JS_TAG_FLOAT64}) = Just JSTagFloat64
+  fromCType _ = Nothing
 
 data JSTypeEnum = JSTypeFromTag JSTagEnum
                 | JSIsNumber
@@ -149,31 +148,24 @@ data JSTypeEnum = JSTypeFromTag JSTagEnum
                 | JSIsError
   deriving Show
 
-instance ToJSON JSTypeEnum where
-  toJSON (JSTypeFromTag t) = toJSON t
-  toJSON JSIsNumber = toJSON ("JSIsNumber" :: String)
-  toJSON JSIsArray = toJSON ("JSIsArray" :: String)
-  toJSON JSIsDate = toJSON ("JSIsDate" :: String)
-  toJSON JSIsError = toJSON ("JSIsError" :: String)
-
-
 data JSEvalType = Global | Module
 
   
 instance Num a => ToCType JSEvalType a where
-  toCType Global = 0
-  toCType Module = 1
+  toCType Global = #{const JS_EVAL_TYPE_GLOBAL}
+  toCType Module = #{const JS_EVAL_TYPE_MODULE}
 
 
-data JSGPNMask = JSGPNStringMask | JSGPNSymbolMask | JSGPNPrivateMask | JSGPNEnumOnly | JSGPNSetEnum
-  -- deriving (Num, Eq, Bits)
+newtype JSGPNMask = JSGPNMask { unJSGPNMask :: CInt }
+  deriving (Eq, Bits)
 
-instance Num a => ToCType JSGPNMask a where
-  toCType JSGPNStringMask = 1
-  toCType JSGPNSymbolMask = 2
-  toCType JSGPNPrivateMask = 4
-  toCType JSGPNEnumOnly = 16
-  toCType JSGPNSetEnum = 32
+#{enum JSGPNMask, JSGPNMask
+, jsGPNStringMask  = JS_GPN_STRING_MASK
+, jsGPNSymbolMask  = JS_GPN_SYMBOL_MASK
+, jsGPNPrivateMask = JS_GPN_PRIVATE_MASK
+, jsGPNEnumOnly    = JS_GPN_ENUM_ONLY
+, jsGPNSetEnum     = JS_GPN_SET_ENUM
+}
 
 
 quickjsCtx :: Context

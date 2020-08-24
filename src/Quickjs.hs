@@ -5,7 +5,7 @@ Module      : Quickjs
 Description : Haskell bindings to the [QuickJS](https://bellard.org/quickjs/) library
 Copyright   : (c) Samuel Balco, 2020
 License     : MIT
-Maintainer  : sam@definitelynotspam.email
+Maintainer  : goodlyrottenapple@gmail.com
 
 This is a very basic wrapper for the [QuickJS](https://bellard.org/quickjs/) .
 
@@ -334,7 +334,7 @@ forLoop end f = go 0
 
 jsObjectToJSON :: (MonadCatch m, MonadIO m) => JSContextPtr -> JSValue -> m (HashMap Text Value)
 jsObjectToJSON ctxPtr obj = do
-    let flags = toCType JSGPNStringMask .|. toCType JSGPNSymbolMask .|. toCType JSGPNEnumOnly
+    let flags = unJSGPNMask $ jsGPNStringMask .|. jsGPNSymbolMask .|. jsGPNEnumOnly
     properties <- liftIO $ malloc
     plen <- jsGetOwnPropertyNames ctxPtr obj properties flags 
       `catch` (\(e::SomeJSRuntimeException) -> do
