@@ -18,7 +18,7 @@ import           Quickjs
 
 
 eval_1_plus_2 :: Assertion
-eval_1_plus_2 = quickjs $ do
+eval_1_plus_2 = quickjsMultithreaded $ do
   v <- eval "1 + 2;"
   liftIO $ v @?= Number 3
 
@@ -52,7 +52,7 @@ instance QC.Arbitrary Value where
 
 marshall_to_from_JSValue :: Value -> QC.Property    
 marshall_to_from_JSValue val = QC.monadicIO $ do
-  val' <- QC.run $ quickjs $ withJSValue val $ \jsval ->
+  val' <- QC.run $ quickjsMultithreaded $ withJSValue val $ \jsval ->
     fromJSValue_ jsval
   QC.assert $ val == val'
 
@@ -61,9 +61,9 @@ tests =
   -- adjustOption (\_ -> QuickCheckTests 10) $
   -- adjustOption (\_ -> QuickCheckVerbose True) $  
   testGroup "Quickjs"
-    [ testCase "empty quickjs call" (quickjs $ pure ())
-    , after AllSucceed "empty quickjs call" $ testCase "eval '1 + 2;'" eval_1_plus_2
-    , after AllSucceed "eval" $ testProperty "marshalling Value to JSValue and back" marshall_to_from_JSValue
+    [ testCase "empty quickjs call" (quickjsMultithreaded $ pure ())
+    , testCase "eval '1 + 2;'" eval_1_plus_2
+    , testProperty "marshalling Value to JSValue and back" marshall_to_from_JSValue
     ]
 
 main = defaultMain tests
