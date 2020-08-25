@@ -12,7 +12,7 @@ This is a very basic wrapper for the [QuickJS](https://bellard.org/quickjs/) .
 The current functionality includes evaluating JS code, calling a JS function in the global scope
 and marshalling 'Value's to and from 'JSValue's.
 -}
-module Quickjs (JSValue, JSContextPtr, quickjs, call, eval, eval_, withJSValue, fromJSValue_) where
+module Quickjs (JSValue, JSContextPtr, quickjs, quickjsMultithreaded, call, eval, eval_, withJSValue, fromJSValue_) where
 
 import           Foreign
 import           Foreign.C                   (CString, CInt, CDouble, CSize)
@@ -24,6 +24,7 @@ import           Control.Monad               (when, forM_)
 import           Control.Monad.Reader        (MonadReader, runReaderT, ask)
 import           Control.Monad.Trans.Reader  (ReaderT)
 import           Control.Monad.IO.Class      (MonadIO, liftIO)
+import           Control.Monad.IO.Unlift     (MonadUnliftIO(..), UnliftIO(..), askUnliftIO)
 import           Data.Aeson                  (Value(..), encode, toJSON)
 import qualified Data.Aeson                  as Aeson
 import           Data.Scientific             (fromFloatDigits, toRealFloat, toBoundedInteger, isInteger)
@@ -584,3 +585,34 @@ quickjs f = do
     cleanup ctx rt = liftIO $ do
       jsFreeContext ctx
       jsFreeRuntime rt
+
+{-|
+This env differs from regular 'quickjs', in that it wraps the computation in the 'runInBoundThread' function.
+This is needed when running the Haskell program mutithreaded (e.g. when using the testing framework Tasty),
+since  quickjs does not like being called from an OS thread other than the one it was started in.
+Because Haskell uses lightweight threads, this might happen if threaded mode is enabled, as is the case in Tasty.
+This problem does not occur when running via Main.hs, if compiled as single threaded...
+For more info see the paper [Extending the Haskell Foreign Function Interface with Concurrency](https://simonmar.github.io/bib/papers/conc-ffi.pdf)
+-}
+quickjsMultithreaded :: MonadUnliftIO m => ReaderT (Ptr JSContext) m b -> m b
+quickjsMultithreaded f 
+  | rtsSupportsBoundThreads = do
+    (u :: UnliftIO m) <- askUnliftIO
+    
+    liftIO $ runInBoundThread $ do
+      rt <- jsNewRuntime
+      ctx <- jsNewContext rt
+
+      [C.block| void { 
+        js_std_add_helpers($(JSContext *ctx), -1, NULL);
+      } |]
+
+      res <-  unliftIO u $ runReaderT f ctx
+      cleanup ctx rt
+      return res
+  | otherwise = quickjs f
+  where
+    cleanup ctx rt = do
+      jsFreeContext ctx
+      jsFreeRuntime rt
+
