@@ -7,9 +7,8 @@ import           Data.Bits                 (Bits)
 import           Foreign.C.Types
 import           Foreign.Ptr               (plusPtr)
 import           Foreign.Storable          (Storable(..))
-import qualified Language.Haskell.TH       as TH
 import           Language.C.Inline
-import           Language.C.Inline.Context
+import           Language.C.Inline.Context (Context(..), TypesTable)
 import qualified Language.C.Types          as C
 
 #include "quickjs.h"
@@ -175,7 +174,7 @@ quickjsCtx = baseCtx <> fptrCtx <> ctx
       { ctxTypesTable = quickjsTypesTable
       }
 
-quickjsTypesTable :: Map.Map C.TypeSpecifier TH.TypeQ
+quickjsTypesTable :: TypesTable
 quickjsTypesTable = Map.fromList
   [ 
     (C.TypeName "JSValue", [t| JSValue |])
