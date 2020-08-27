@@ -1,6 +1,6 @@
 # quickjs-hs
 
-![Tests CI](https://github.com/goodlyrottenapple/quickjs-hs/workflows/Tests%20CI/badge.svg)
+![Tests Cabal](https://github.com/goodlyrottenapple/quickjs-hs/workflows/Tests%20Cabal/badge.svg)
 
 
 This package provides a Haskell wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
