@@ -38,12 +38,13 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         # use this to specify what resolvers and ghc to use
         plan:
-        - { resolver: "--resolver lts-9"  }    # ghc-8.0.2
-        - { resolver: "--resolver lts-11"  }   # ghc-8.2.2
-        - { resolver: "--resolver lts-12"  }   # ghc-8.4.4
+        # - { resolver: "--resolver lts-9"  }    # ghc-8.0.2
+        # - { resolver: "--resolver lts-11"  }   # ghc-8.2.2
+        # - { resolver: "--resolver lts-12"  }   # ghc-8.4.4
         - { resolver: "--resolver lts-14"  }   # ghc-8.6.5
+        - { resolver: "--resolver lts-16"  } 
         - { resolver: "--resolver nightly" }
-        - { resolver: ""                   }
+        # - { resolver: ""                   }
         # use this to include any dependencies from OS package managers
         include: []
         # - os: macOS-latest
