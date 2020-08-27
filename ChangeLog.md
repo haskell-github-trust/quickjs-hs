@@ -1,5 +1,13 @@
 # Changelog for quickjs-hs
 
+### 0.1.2.1
+
+* This one should compile
+
+### 0.1.2
+
+* removed `DerivingVia` for better backwards compatibility
+
 ### 0.1.1
 
 * relaxed bounds on packages

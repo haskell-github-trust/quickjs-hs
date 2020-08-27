@@ -1,6 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
-version:        0.1.2
+version:        0.1.2.1
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco
@@ -18,6 +18,19 @@ description:
     This library is a wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
     .
     To get started, see the ReadMe below.
+
+
+extra-source-files:
+    quickjs/cutils.h
+  , quickjs/libbf.h
+  , quickjs/libunicode-table.h
+  , quickjs/libunicode.h
+  , quickjs/libregexp-opcode.h
+  , quickjs/libregexp.h
+  , quickjs/list.h
+  , quickjs/quickjs-atom.h
+  , quickjs/quickjs-opcode.h
+
 
 source-repository head
   type: git
@@ -57,21 +70,11 @@ library
     , quickjs/quickjs.c
     , quickjs/quickjs-libc.h
     , quickjs/quickjs-libc.c
-  includes: 
-      quickjs/cutils.h
-    , quickjs/libbf.h
-    , quickjs/libunicode-table.h
-    , quickjs/libunicode.h
-    , quickjs/libregexp-opcode.h
-    , quickjs/libregexp.h
-    , quickjs/list.h
-    , quickjs/quickjs-atom.h
-    , quickjs/quickjs-opcode.h
+
   cc-options: 
     -static -D_GNU_SOURCE 
     -DCONFIG_VERSION="2020-07-05"
     -DCONFIG_BIGNUM
-
 
 test-suite quickjs-hs-test
   type:             exitcode-stdio-1.0
