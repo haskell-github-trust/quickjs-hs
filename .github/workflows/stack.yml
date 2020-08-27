@@ -38,13 +38,12 @@ jobs:
         os: [ubuntu-latest, macOS-latest]
         # use this to specify what resolvers and ghc to use
         plan:
-        - { build: stack, resolver: "--resolver lts-9"  }    # ghc-8.0.2
-        - { build: stack, resolver: "--resolver lts-11"  }   # ghc-8.2.2
-        - { build: stack, resolver: "--resolver lts-12"  }   # ghc-8.4.4
-        # - { build: stack, resolver: "--resolver lts-13"  }  redundant because lts-14 checks ghc-8.6 already
-        - { build: stack, resolver: "--resolver lts-14"  }   # ghc-8.6.5
-        - { build: stack, resolver: "--resolver nightly" }
-        - { build: stack, resolver: ""                   }
+        - { resolver: "--resolver lts-9"  }    # ghc-8.0.2
+        - { resolver: "--resolver lts-11"  }   # ghc-8.2.2
+        - { resolver: "--resolver lts-12"  }   # ghc-8.4.4
+        - { resolver: "--resolver lts-14"  }   # ghc-8.6.5
+        - { resolver: "--resolver nightly" }
+        - { resolver: ""                   }
         # use this to include any dependencies from OS package managers
         include: []
         # - os: macOS-latest
@@ -68,17 +67,9 @@ jobs:
         path: ~/.stack
         key: ${{ runner.os }}-stack-v1
 
-    - name: Cache Cabal
-      id: cache-cabal
-      uses: actions/cache@v1
-      with:
-        path: ~/.cabal
-        key: ${{ runner.os }}-cabal-v1
 
-    - name: Build
+    - name: Build & Test
       run: |
-        stack build --ghc-options="-Werror" --only-dependencies
-
-    - name: Test
-      run: |
-        stack test --ghc-options="-Werror"
+        stack --no-terminal $ARGS test --bench --no-run-benchmarks
+      env:
+        ARGS: ${{ matrix.plan.resolver }}

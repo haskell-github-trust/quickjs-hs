@@ -1,6 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
-version:        0.1.1
+version:        0.1
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco
@@ -52,13 +52,9 @@ library
   -- To make both `cabal repl` and `stack ghci` work, we have to
   -- make "a.cpp" come alphabetically before "main.cpp".
   c-sources: 
-      quickjs/cutils.h
-    , quickjs/cutils.c
-    , quickjs/libbf.h
+      quickjs/cutils.c
     , quickjs/libbf.c
-    , quickjs/libregexp.h
     , quickjs/libregexp.c
-    , quickjs/libunicode.h
     , quickjs/libunicode.c
     , quickjs/quickjs.h
     , quickjs/quickjs.c
