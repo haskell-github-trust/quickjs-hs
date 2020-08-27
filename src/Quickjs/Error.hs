@@ -1,4 +1,4 @@
-{-# LANGUAGE ExistentialQuantification, DuplicateRecordFields, GeneralizedNewtypeDeriving, DerivingStrategies, DeriveGeneric, DerivingVia, RecordWildCards #-}
+{-# LANGUAGE ExistentialQuantification, DuplicateRecordFields, GeneralizedNewtypeDeriving, DerivingStrategies, DeriveGeneric, RecordWildCards #-}
 
 module Quickjs.Error where
 import           Control.Exception   (Exception(..), SomeException)
@@ -32,23 +32,17 @@ jsRuntimeExceptionFromException x = do
     cast a
 
 
-newtype JSRuntimeException e = JSRuntimeException e 
-  deriving Generic
-  deriving newtype Show
-
-instance (Show e, Typeable e) => Exception (JSRuntimeException e)
-  where
-    toException = jsRuntimeExceptionToException
-    fromException = jsRuntimeExceptionFromException
-
-
 
 instance ToJSON CLong where
   toJSON cl = toJSON (fromIntegral cl :: Integer)
 
 data UnknownJSTag = UnknownJSTag {raw_tag :: !CLong} 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException UnknownJSTag)
+
+instance Exception UnknownJSTag where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
+
 
 instance Show UnknownJSTag where
   show UnknownJSTag{..} = "Uknown JS tag: " ++ show raw_tag
@@ -56,8 +50,10 @@ instance Show UnknownJSTag where
 
 data UnsupportedTypeTag = UnsupportedTypeTag {_tag :: JSTagEnum} 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException UnsupportedTypeTag)
 
+instance Exception UnsupportedTypeTag where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
 
 instance Show UnsupportedTypeTag where
   show UnsupportedTypeTag{..} = "Unsupported type tag: " ++ show _tag
@@ -65,7 +61,11 @@ instance Show UnsupportedTypeTag where
 
 data JSException = JSException {location :: Text, message :: Text} 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException JSException)
+
+instance Exception JSException where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
+
 
 instance Show JSException where
     show JSException{..} = "JS runtime threw an exception in " ++ toS location ++ ":\n=================\n" ++ toS message ++ "\n=================\n"
@@ -74,7 +74,11 @@ instance Show JSException where
 
 data JSValueUndefined = JSValueUndefined {value :: Text} 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException JSValueUndefined)
+
+instance Exception JSValueUndefined where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
+
 
 instance Show JSValueUndefined where
   show JSValueUndefined{..} =  "The JS value '" ++ toS value ++ "' is undefined."
@@ -87,7 +91,11 @@ data JSValueIncorrectType =
   , found :: JSTypeEnum
   } 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException JSValueIncorrectType)
+
+instance Exception JSValueIncorrectType where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
+
 
 instance Show JSValueIncorrectType where
   show JSValueIncorrectType{..} = "Type mismatch of the JS value '" ++ toS name ++ "'. Expected: " ++ show expected ++ ", found: " ++ show found
@@ -95,7 +103,10 @@ instance Show JSValueIncorrectType where
 
 data InternalError = InternalError { message :: Text } 
   deriving (Generic, Typeable)
-  deriving Exception via (JSRuntimeException InternalError)
+
+instance Exception InternalError where
+  toException   = jsRuntimeExceptionToException
+  fromException = jsRuntimeExceptionFromException
 
 instance Show InternalError where
   show InternalError{..} = "Internal error occured:\n" ++ toS message
