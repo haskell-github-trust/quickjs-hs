@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        cabal: ["3.2", "2.4."]
+        cabal: ["3.2", "2.4"]
         ghc: ["8.6.5", "8.8.3", "8.10.1"]
     env:
       CONFIG: "--enable-tests --enable-benchmarks"
@@ -41,4 +41,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.ghc }}-
       - run: cabal build $CONFIG
-      - run: cabal test $CONFIG --tests-show-details=streaming --log=/dev/stdout
+      - run: cabal test $CONFIG
