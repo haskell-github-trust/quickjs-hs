@@ -72,6 +72,7 @@ library
     -DCONFIG_VERSION="2020-07-05"
     -DCONFIG_BIGNUM
 
+
 test-suite quickjs-hs-test
   type:             exitcode-stdio-1.0
   main-is:          Spec.hs
