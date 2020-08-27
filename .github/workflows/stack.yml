@@ -15,7 +15,7 @@
 #     so we can wait for then.
 # * support for cabal-install >= 3
 
-name: Tests CI
+name: Tests Stack
 
 on:
   push:
