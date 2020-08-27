@@ -13,7 +13,7 @@ extra-source-files:
     README.md
     ChangeLog.md
 category:       Javascript
-synopsis:       Bindings for the QuickJS Javascript Engine
+synopsis:       Wrapper for the QuickJS Javascript Engine
 description:
     This library is a wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
     .
