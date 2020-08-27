@@ -1,7 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
 version:        0.1
-description:    Please see the README on GitHub at <https://github.com/goodlyrottenapple/quickjs-hs#readme>
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco
@@ -14,8 +13,11 @@ extra-source-files:
     README.md
     ChangeLog.md
 category:       Javascript
-synopsis:       Bindings for the QuickJS library
--- description:
+synopsis:       Bindings for the QuickJS Javascript Engine
+description:
+    This library is a wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
+    .
+    To get started, see the ReadMe below.
 
 source-repository head
   type: git

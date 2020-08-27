@@ -3,7 +3,7 @@
 ![Tests CI](https://github.com/goodlyrottenapple/quickjs-hs/workflows/Tests%20CI/badge.svg)
 
 
-This package provides a Haskell wrapper for the [QuickJS](https://bellard.org/quickjs/) library.
+This package provides a Haskell wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
 
 ## Features
 
