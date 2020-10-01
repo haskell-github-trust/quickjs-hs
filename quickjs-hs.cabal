@@ -19,7 +19,6 @@ description:
     .
     To get started, see the ReadMe below.
 
-
 extra-source-files:
     quickjs/cutils.h
   , quickjs/libbf.h
@@ -30,7 +29,6 @@ extra-source-files:
   , quickjs/list.h
   , quickjs/quickjs-atom.h
   , quickjs/quickjs-opcode.h
-
 
 source-repository head
   type: git
