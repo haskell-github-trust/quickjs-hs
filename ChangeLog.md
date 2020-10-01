@@ -1,5 +1,9 @@
 # Changelog for quickjs-hs
 
+### 0.1.2.2
+
+* Bumped the quickjs library to release 2020-09-06
+
 ### 0.1.2.1
 
 * This one should compile

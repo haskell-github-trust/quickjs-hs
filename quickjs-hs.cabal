@@ -1,6 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
-version:        0.1.2.1
+version:        0.1.2.2
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco
@@ -44,7 +44,7 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base                 >=4.9   && <5
+      base                 >=4.11  && <5
     , aeson                >=1.1   && <1.6
     , bytestring           >=0.10  && <0.11
     , containers           >=0.5   && <0.7
@@ -73,7 +73,7 @@ library
 
   cc-options: 
     -static -D_GNU_SOURCE 
-    -DCONFIG_VERSION="2020-07-05"
+    -DCONFIG_VERSION="2020-09-06"
     -DCONFIG_BIGNUM
 
 test-suite quickjs-hs-test
