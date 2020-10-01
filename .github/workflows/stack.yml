@@ -60,7 +60,8 @@ jobs:
         apt-get: ${{ matrix.apt-get }}
         brew: ${{ matrix.brew }}
     - uses: actions/checkout@v2
-
+      with:
+        submodules: true
     - name: Cache Stack
       id: cache-stack
       uses: actions/cache@v1

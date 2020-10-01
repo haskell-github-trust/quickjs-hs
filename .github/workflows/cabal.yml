@@ -29,6 +29,8 @@ jobs:
       CONFIG: "--enable-tests --enable-benchmarks"
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: true
       - uses: actions/setup-haskell@v1.1.2
         id: setup-haskell-cabal
         with:
