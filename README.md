@@ -3,8 +3,7 @@
 ![Tests Cabal](https://github.com/goodlyrottenapple/quickjs-hs/workflows/Tests%20Cabal/badge.svg)
 
 
-This package provides a Haskell wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine.
-
+This package provides a Haskell wrapper for the [QuickJS](https://bellard.org/quickjs/) Javascript Engine. It has been inspired by the [quickjs-rs](https://github.com/theduke/quickjs-rs) and [ocaml-quickjs](https://github.com/dhcmrlchtdj/ocaml-quickjs) libraries.
 ## Features
 
 The functionality is quite basic and is currently limited to:
