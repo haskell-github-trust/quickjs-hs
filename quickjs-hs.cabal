@@ -1,6 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
-version:        0.1.2.2
+version:        0.1.2.3
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco

@@ -1,3 +1,5 @@
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Main where
@@ -10,17 +12,26 @@ import qualified Test.QuickCheck         as QC
 import qualified Test.QuickCheck.Monadic as QC
 import           Data.Aeson              (Value(..))
 import           Control.Monad.IO.Class  (liftIO)
-import           Control.Monad.Catch     (SomeException, MonadCatch(..))
+import           Control.Monad.Catch     (try, SomeException, MonadCatch(..))
 import           Data.Text               (pack)
 import qualified Data.HashMap.Strict            as HM
 import qualified Data.Vector             as V
 import           Quickjs
+import Test.HUnit (assertFailure)
+import Quickjs.Error (SomeJSRuntimeException)
 
 
 eval_1_plus_2 :: Assertion
 eval_1_plus_2 = quickjsMultithreaded $ do
   v <- eval "1 + 2;"
   liftIO $ v @?= Number 3
+
+
+eval_throw :: Assertion
+eval_throw = quickjsMultithreaded $
+  try (eval "throw 'Error'") >>= \case
+    Left (_ :: SomeJSRuntimeException) -> return ()
+    Right _ -> liftIO $ assertFailure "should fail with an Exception..."
 
 genText = do 
   k <- QC.choose (0,200) 
@@ -63,6 +74,7 @@ tests =
   testGroup "Quickjs"
     [ testCase "empty quickjs call" (quickjsMultithreaded $ pure ())
     , testCase "eval '1 + 2;'" eval_1_plus_2
+    , testCase "eval throw" eval_throw
     , testProperty "marshalling Value to JSValue and back" marshall_to_from_JSValue
     ]
 

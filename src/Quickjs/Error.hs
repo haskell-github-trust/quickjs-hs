@@ -18,10 +18,7 @@ data SomeJSRuntimeException = forall e . Exception e => SomeJSRuntimeException e
 instance Show SomeJSRuntimeException where
     show (SomeJSRuntimeException e) = show e
 
-instance Exception SomeJSRuntimeException where
-    toException = jsRuntimeExceptionToException
-    fromException = jsRuntimeExceptionFromException
-
+instance Exception SomeJSRuntimeException
 
 jsRuntimeExceptionToException :: Exception e => e -> SomeException
 jsRuntimeExceptionToException = toException . SomeJSRuntimeException
