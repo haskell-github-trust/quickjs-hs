@@ -1,6 +1,6 @@
 cabal-version:  1.12
 name:           quickjs-hs
-version:        0.1.2.3
+version:        0.1.2.4
 homepage:       https://github.com/goodlyrottenapple/quickjs-hs#readme
 bug-reports:    https://github.com/goodlyrottenapple/quickjs-hs/issues
 author:         Sam Balco
@@ -71,7 +71,7 @@ library
 
   cc-options: 
     -static -D_GNU_SOURCE 
-    -DCONFIG_VERSION="2020-09-06"
+    -DCONFIG_VERSION="2020-11-08"
     -DCONFIG_BIGNUM
 
 test-suite quickjs-hs-test
@@ -87,7 +87,7 @@ test-suite quickjs-hs-test
     , aeson
     , exceptions
     , HUnit                >=1.6.0.0  && <1.7
-    , QuickCheck           >=2.9  && <2.14
+    , QuickCheck           >=2.9  && <2.15
     , tasty                >=1.0  && <1.3
     , tasty-hunit          >=0.10 && <0.11
     , tasty-quickcheck     >=0.9  && <0.11
