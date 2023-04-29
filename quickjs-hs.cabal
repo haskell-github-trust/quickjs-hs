@@ -67,11 +67,11 @@ library
     , quickjs/libbf.c
     , quickjs/libunicode.c
     , quickjs/libregexp.c
-    , quickjs/quickjs.h
     , quickjs/quickjs.c
-    , quickjs/quickjs-libc.h
     , quickjs/quickjs-libc.c
-
+  includes:
+       quickjs/quickjs.h
+     , quickjs/quickjs-libc.h
   cc-options:
     -static -D_GNU_SOURCE
     -DCONFIG_VERSION="2020-11-08"
