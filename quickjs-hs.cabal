@@ -42,24 +42,27 @@ library
   hs-source-dirs:
       src
   build-depends:
-      base                 >=4.11  && <5
-    , aeson                >=1.1   && <1.6
-    , bytestring           >=0.10  && <0.11
-    , containers           >=0.5   && <0.7
-    , exceptions           >=0.8   && <0.11
-    , inline-c             >=0.5   && <0.10
-    , mtl                  >=2.2.2 && <2.3
-    , scientific           >=0.3.5 && <0.4
-    , string-conv          >=0.1.2 && <0.2
-    , text                 >=1.2.0 && <1.3
-    , time                 >=1.8   && <1.10
-    , transformers         >=0.5   && <0.6
-    , unliftio-core        >=0.1   && <0.2.1
-    , unordered-containers >=0.2.8 && <0.3
-    , vector               >=0.12  && <0.13
+    base                          >= 4.16.4 && < 4.17,
+
+    aeson                         >= 2.1.2 && < 2.2,
+    bytestring                    >= 0.11.4 && < 0.12,
+    containers                    >= 0.6.5 && < 0.7,
+    exceptions                    >= 0.10.4 && < 0.11,
+    inline-c                      >= 0.9.1 && < 0.10,
+    mtl                           >= 2.2.2 && < 2.3,
+    scientific                    >= 0.3.7 && < 0.4,
+    string-conv                   >= 0.2.0 && < 0.3,
+    text                          >= 1.2.5 && < 1.3,
+    time                          >= 1.11.1 && < 1.12,
+    transformers                  >= 0.5.6 && < 0.6,
+    unliftio-core                 >= 0.2.1 && < 0.3,
+    unordered-containers          >= 0.2.19 && < 0.3,
+    vector                        >= 0.13.0 && < 0.14
+
+
   default-language: Haskell2010
   include-dirs: quickjs
-  c-sources: 
+  c-sources:
       quickjs/cutils.c
     , quickjs/libbf.c
     , quickjs/libunicode.c
@@ -69,8 +72,8 @@ library
     , quickjs/quickjs-libc.h
     , quickjs/quickjs-libc.c
 
-  cc-options: 
-    -static -D_GNU_SOURCE 
+  cc-options:
+    -static -D_GNU_SOURCE
     -DCONFIG_VERSION="2020-11-08"
     -DCONFIG_BIGNUM
 
@@ -86,12 +89,11 @@ test-suite quickjs-hs-test
     , quickjs-hs           -any
     , aeson
     , exceptions
-    , HUnit                >=1.6.0.0  && <1.7
-    , QuickCheck           >=2.9  && <2.15
-    , tasty                >=1.0  && <1.3
-    , tasty-hunit          >=0.10 && <0.11
-    , tasty-quickcheck     >=0.9  && <0.11
+    , HUnit                >=1.6.0.0
+    , QuickCheck           >=2.9
+    , tasty                >=1.0
+    , tasty-hunit          >=0.10
+    , tasty-quickcheck     >=0.9
     , text
     , unordered-containers
     , vector
-
