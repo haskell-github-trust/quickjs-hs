@@ -20,15 +20,7 @@ description:
     To get started, see the ReadMe below.
 
 extra-source-files:
-    quickjs/cutils.h
-  , quickjs/libbf.h
-  , quickjs/libunicode-table.h
-  , quickjs/libunicode.h
-  , quickjs/libregexp-opcode.h
-  , quickjs/libregexp.h
-  , quickjs/list.h
-  , quickjs/quickjs-atom.h
-  , quickjs/quickjs-opcode.h
+    quickjs/*.h
 
 source-repository head
   type: git
