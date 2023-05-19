@@ -20,8 +20,8 @@ jobs:
     strategy:
       matrix:
         plan:
-          - { ghc: "8.10.4", cabal: "3.2.1" }
-          - { ghc: "9.2.4", cabal: "3.6.3" }
+          - { ghc: "8.10.4" }
+          - { ghc: "9.2.4" }
     env:
       CONFIG: "--enable-tests --enable-benchmarks"
     steps:
@@ -32,7 +32,6 @@ jobs:
         id: setup-haskell-cabal
         with:
           ghc-version: ${{ matrix.plan.ghc }}
-          cabal-version: ${{ matrix.plan.cabal }}
       - run: cabal v2-update
       - run: cabal v2-freeze $CONFIG
       - uses: actions/cache@v2
