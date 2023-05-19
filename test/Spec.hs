@@ -15,11 +15,14 @@ import           Control.Monad.IO.Class  (liftIO)
 import           Control.Monad.Catch     (try, SomeException, MonadCatch(..))
 import           Data.Text               (pack)
 import qualified Data.HashMap.Strict            as HM
+import qualified Data.Aeson.KeyMap             as KM
+import qualified Data.Aeson.Key             as K
 import qualified Data.Vector             as V
 import           Quickjs
 import Test.HUnit (assertFailure)
 import Quickjs.Error (SomeJSRuntimeException)
-
+import Control.Monad(guard)
+import qualified Data.Text as T
 
 eval_1_plus_2 :: Assertion
 eval_1_plus_2 = quickjsMultithreaded $ do
@@ -33,20 +36,22 @@ eval_throw = quickjsMultithreaded $
     Left (_ :: SomeJSRuntimeException) -> return ()
     Right _ -> liftIO $ assertFailure "should fail with an Exception..."
 
-genText = do 
-  k <- QC.choose (0,200) 
-  pack <$> QC.vectorOf k (QC.oneof $ map pure $ ['0'..'~'])
+genText  = do
+  k <- QC.choose (0,200)
+  t <- pack <$> QC.vectorOf k (QC.oneof $ map pure $ ['0'..'~'])
+  pure t
+
 
 genVal 0 = QC.oneof
-  [ 
+  [
     String <$> genText
   , Number . fromInteger <$> QC.arbitrary
   , Bool <$> QC.arbitrary
   , pure Null
   ]
 genVal n | n > 0 = QC.oneof
-  [ 
-    do { k <- QC.choose (0,n) ; Object . HM.fromList <$> (zip <$> QC.vectorOf k genText <*> QC.vectorOf k genVal') }      
+  [
+    do { k <- QC.choose (0,n) ; Object . KM.fromList <$> (zip <$> QC.vectorOf k (K.fromText <$> genText) <*> QC.vectorOf k genVal') }
   , do { k <- QC.choose (0,n) ; Array . V.fromList <$> QC.vectorOf k genVal' }
   , String <$> genText
   , Number . fromInteger <$> QC.arbitrary
@@ -55,22 +60,23 @@ genVal n | n > 0 = QC.oneof
   ]
   where genVal' = genVal (n `div` 2)
 
-instance QC.Arbitrary Value where
-  arbitrary = QC.sized genVal
+-- | There's an Arbitrary instance for Value floating around, but our tests don't pass
+--   with it because it produces null characters in text. These are not valid
+--   javascript strings, so we have our own.
+newtype GenVal = GenVal Value deriving Show
+instance QC.Arbitrary GenVal where
+  arbitrary = GenVal <$> QC.sized genVal
 
-
-
-
-marshall_to_from_JSValue :: Value -> QC.Property    
-marshall_to_from_JSValue val = QC.monadicIO $ do
+marshall_to_from_JSValue :: GenVal -> QC.Property
+marshall_to_from_JSValue (GenVal val) = QC.monadicIO $ do
   val' <- QC.run $ quickjsMultithreaded $ withJSValue val $ \jsval ->
     fromJSValue_ jsval
-  QC.assert $ val == val'
+  pure $ (val QC.=== val')
 
 tests :: TestTree
-tests = 
+tests =
   -- adjustOption (\_ -> QuickCheckTests 10) $
-  -- adjustOption (\_ -> QuickCheckVerbose True) $  
+  -- adjustOption (\_ -> QuickCheckVerbose True) $
   testGroup "Quickjs"
     [ testCase "empty quickjs call" (quickjsMultithreaded $ pure ())
     , testCase "eval '1 + 2;'" eval_1_plus_2
